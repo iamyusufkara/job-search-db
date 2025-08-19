@@ -1,5 +1,6 @@
 // See https://github.com/typicode/json-server#module
 const jsonServer = require('json-server')
+const cors = require('cors')
 
 const server = jsonServer.create()
 
@@ -10,6 +11,13 @@ const server = jsonServer.create()
 // const data = fs.readFileSync(filePath, "utf-8");
 // const db = JSON.parse(data);
 // const router = jsonServer.router(db)
+
+// CORS aktivieren – nur dein Frontend erlauben
+server.use(cors({
+  origin: "https://job-search-phi-jade.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type"]
+}))
 
 // Comment out to allow write operations
 const router = jsonServer.router('db.json')
