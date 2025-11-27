@@ -1,41 +1,33 @@
-// See https://github.com/typicode/json-server#module
-const jsonServer = require('json-server')
-const cors = require('cors')
+const jsonServer = require("json-server");
+const cors = require("cors");
 
-const server = jsonServer.create()
+const server = jsonServer.create();
+const router = jsonServer.router("db.json");
+const middlewares = jsonServer.defaults();
 
-// Uncomment to allow write operations
-// const fs = require('fs')
-// const path = require('path')
-// const filePath = path.join('db.json')
-// const data = fs.readFileSync(filePath, "utf-8");
-// const db = JSON.parse(data);
-// const router = jsonServer.router(db)
+// CORS – nur dein Frontend erlauben
+server.use(
+  cors({
+    origin: "https://job-search-three-gray.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
-// CORS aktivieren – nur dein Frontend erlauben
-server.use(cors({
-  origin: "https://job-search-three-gray.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type"]
-}))
+// Preflight
+server.options("*", cors());
 
-server.options('*', cors()) // Preflight Fix
+// Optional: Rewrites
+server.use(
+  jsonServer.rewriter({
+    "/api/*": "/$1",
+  })
+);
 
-// Comment out to allow write operations
-const router = jsonServer.router('db.json')
+server.use(middlewares);
+server.use(router);
 
-const middlewares = jsonServer.defaults()
-
-server.use(middlewares)
-// Add this before server.use(router)
-server.use(jsonServer.rewriter({
-    '/api/*': '/$1',
-    '/blog/:resource/:id/show': '/:resource/:id'
-}))
-server.use(router)
-server.listen(3000, () => {
-    console.log('JSON Server is running')
-})
-
-// Export the Server API
-module.exports = server
+// WICHTIG: Vercel Function Export
+module.exports = (req, res) => {
+  server(req, res);
+};
