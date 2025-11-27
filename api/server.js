@@ -19,6 +19,8 @@ server.use(cors({
   allowedHeaders: ["Content-Type"]
 }))
 
+server.options('*', cors()) // Preflight Fix
+
 // Comment out to allow write operations
 const router = jsonServer.router('db.json')
 
