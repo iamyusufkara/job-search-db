@@ -8,7 +8,7 @@ const middlewares = jsonServer.defaults();
 // CORS – nur dein Frontend erlauben
 server.use(
   cors({
-    origin: "https://job-search-three-gray.vercel.app",
+    origin: "https://job-search-three-gray.vercel.app/",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type"],
   })
